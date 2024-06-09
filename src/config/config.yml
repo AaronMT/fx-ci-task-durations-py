@@ -1,6 +1,6 @@
 projects:
   - name: "fenix"
-    repository: "mozilla-central"
+    repository: "autoland"
     tasks:
     - name: "ui-test-arm"
       symbol: "ui-test-arm"

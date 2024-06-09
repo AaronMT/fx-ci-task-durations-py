@@ -2,7 +2,6 @@ import logging
 import os
 from datetime import date, datetime, timedelta
 
-import matplotlib
 import matplotlib.pyplot as plt
 import yaml
 from thclient import TreeherderClient
@@ -105,49 +104,47 @@ def main():
             elif "test-apk" in task["name"]:
                 test_durations.extend(task_data)
 
-            # Plot UI Test Durations
-            if ui_test_durations:
-                sample_number_ui = list(range(1, len(ui_test_durations) + 1))
-                ui_test_duration_times = [
-                    item["duration"] for item in ui_test_durations
-                ]
+        # Plot UI Test Durations
+        if ui_test_durations:
+            sample_number_ui = list(range(1, len(ui_test_durations) + 1))
+            ui_test_duration_times = [item["duration"] for item in ui_test_durations]
 
-                plt.plot(
-                    sample_number_ui,
-                    ui_test_duration_times,
-                    label="UI Test Duration",
-                    marker="o",
-                )
+            plt.plot(
+                sample_number_ui,
+                ui_test_duration_times,
+                label="UI Test Duration",
+                marker="o",
+            )
 
-            # Plot Build Durations
-            if build_durations:
-                sample_number_build = list(range(1, len(build_durations) + 1))
-                build_duration_times = [item["duration"] for item in build_durations]
+        # Plot Build Durations
+        if build_durations:
+            sample_number_build = list(range(1, len(build_durations) + 1))
+            build_duration_times = [item["duration"] for item in build_durations]
 
-                plt.plot(
-                    sample_number_build,
-                    build_duration_times,
-                    label="Build Duration",
-                    marker="x",
-                )
+            plt.plot(
+                sample_number_build,
+                build_duration_times,
+                label="Build Duration",
+                marker="x",
+            )
 
-            # Plot Test Durations
-            if test_durations:
-                sample_number_test = list(range(1, len(test_durations) + 1))
-                test_duration_times = [item["duration"] for item in test_durations]
+        # Plot Test Durations
+        if test_durations:
+            sample_number_test = list(range(1, len(test_durations) + 1))
+            test_duration_times = [item["duration"] for item in test_durations]
 
-                plt.plot(
-                    sample_number_test,
-                    test_duration_times,
-                    label="Unit Test Duration",
-                    marker="s",
-                )
+            plt.plot(
+                sample_number_test,
+                test_duration_times,
+                label="Unit Test Duration",
+                marker="s",
+            )
 
-            plt.title("CI Duration Times by Sampling Size")
-            plt.xlabel("Sample Number")
-            plt.ylabel("Duration (minutes)")
-            plt.legend()
-            plt.show()
+        plt.title(f"CI Duration Times by Sampling Size in {repo}")
+        plt.xlabel("Sample Number")
+        plt.ylabel("Duration (minutes)")
+        plt.legend()
+        plt.savefig("durations.png")
 
 
 if __name__ == "__main__":
