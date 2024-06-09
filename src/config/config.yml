@@ -1,0 +1,20 @@
+projects:
+  - name: "fenix"
+    repository: "mozilla-central"
+    tasks:
+    - name: "ui-test-arm"
+      symbol: "ui-test-arm"
+      group_symbol: "fenix-debug"
+      tier: 2
+      result: "success"
+    - name: "build-apk"
+      symbol: "Bf"
+      group_symbol: "fenix-debug"
+      tier: 1
+      result: "success"
+    - name: "test-apk"
+      symbol: "T"
+      group_symbol: "fenix-debug"
+      tier: 1
+      result: "success"
+
