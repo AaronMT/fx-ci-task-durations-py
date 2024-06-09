@@ -33,11 +33,16 @@ jobs:
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        mkdir -p output/images
+        if [ ! -d output/images ]; then mkdir -p output/images; fi
         mv durations.png output/images/
         git add output/images/durations.png
-        git commit -m "Add durations plot"
-        git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:main
+        git commit -m "Add durations plot image"
+
+    - name: Push image to repo
+      uses: ad-m/github-push-action@v0.8.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
 
     - name: Push image to wiki
       run: |
@@ -52,7 +57,12 @@ jobs:
         # Commit and push the changes
         git add images/durations.png
         git commit -m "Add durations plot to wiki"
-        git push
+
+    - name: Push wiki changes
+      uses: ad-m/github-push-action@v0.8.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
 
     - name: Add image to summary
       run: |
