@@ -1,0 +1,31 @@
+name: Generate and Upload Image
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4.1.6
+
+    - name: Setup Python
+      uses: actions/setup-python@v5.1.0
+      with:
+        python-version: '3.12.3'
+        cache: 'pip'
+      run: pip install requirements.txt
+
+    - name: Generate plot
+      run: |
+        python src/durations.py
+
+    - name: Upload image as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: plot-image
+        path: durations.png # Update this path to where your image is saved
+
+    - name: Add image to summary
+      run: |
+        echo "![Generated Plot](${{ steps.upload.outputs.artifact_url }})" >> $GITHUB_STEP_SUMMARY
