@@ -27,8 +27,15 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: plot-image
-        path: durations.png # Update this path to where your image is saved
+        path: durations.png
+
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: plot-image
+        path: ./artifacts
+
 
     - name: Add image to summary
       run: |
-        echo "![Generated Plot](${{ steps.upload.outputs.artifact_url }})" >> $GITHUB_STEP_SUMMARY
+        echo "![Generated Plot](./artifacts/durations.png)" >> $GITHUB_STEP_SUMMARY
