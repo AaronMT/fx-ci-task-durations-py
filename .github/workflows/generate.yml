@@ -24,18 +24,37 @@ jobs:
         python src/durations.py
 
     - name: Upload image as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.3.3
       with:
         name: plot-image
         path: durations.png
+  
+    - name: Commit plot image
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        mkdir -p output/images
+        mv durations.png output/images/
+        git add output/images/durations.png
+        git commit -m "Add durations plot"
+        git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:main
 
-    - name: Download artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: plot-image
-        path: ./artifacts
-
+    - name: Push image to wiki
+      run: |
+        # Clone the wiki
+        git clone "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git"
+        cd $(basename "${{ github.repository }}.wiki.git")
+        
+        # Add the image
+        if [ ! -d images ]; then mkdir images; fi
+        cp ../output/images/durations.png images/
+        
+        # Commit and push the changes
+        git add images/durations.png
+        git commit -m "Add durations plot to wiki"
+        git push
 
     - name: Add image to summary
       run: |
-        echo "![Generated Plot](./artifacts/durations.png)" >> $GITHUB_STEP_SUMMARY
+        echo "![Generated Plot](https://github.com/${{ github.repository }}/raw/main/output/images/durations.png)" >> $GITHUB_STEP_SUMMARY
+
