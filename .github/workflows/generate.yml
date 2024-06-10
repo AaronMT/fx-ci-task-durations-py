@@ -20,6 +20,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
   
+    - name: Timezone setup 
+      uses: szenius/set-timezone@v2.0
+      with:
+        timezoneLinux: "Canada/Eastern"
+
     - name: Generate plot
       run: |
         python src/durations.py
