@@ -144,7 +144,8 @@ def main():
         plt.xlabel("Sample Number")
         plt.ylabel("Duration (minutes)")
         plt.legend()
-        plt.savefig("durations.png")
+        plt.savefig(f"durations-{project['name']}.png")
+        plt.clf()
 
 
 if __name__ == "__main__":

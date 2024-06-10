@@ -34,11 +34,15 @@ jobs:
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
         if [ ! -d "output/images" ]; then mkdir -p output/images; fi
-        if [ -f "durations.png" ]; then
-          mv durations.png output/images/
-          git add output/images/durations.png
-          git diff --quiet && git diff --staged --quiet || (
-            git commit -m 'Automated push of durations.png' &&
-            git push
-          )
-        fi
+        
+        # Move and commit all PNG files
+        for img in *.png; do
+          mv "$img" output/images/
+          git add output/images/"$img"
+        done
+        
+       
+        git diff --quiet && git diff --staged --quiet || (
+          git commit -m 'Automated push of durations.png' &&
+          git push
+        )
