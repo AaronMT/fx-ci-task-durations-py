@@ -36,13 +36,13 @@ jobs:
         if [ ! -d "output/images" ]; then mkdir -p output/images; fi
         
         # Move and commit all PNG files
-        for img in *.png; do
+        for img in $(ls *.png); do
           mv "$img" output/images/
           git add output/images/"$img"
         done
         
        
         git diff --quiet && git diff --staged --quiet || (
-          git commit -m 'Automated push of durations.png' &&
+          git commit -m 'Automated push of images' &&
           git push
         )
