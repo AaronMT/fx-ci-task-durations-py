@@ -26,10 +26,12 @@ jobs:
         timezoneLinux: "Canada/Eastern"
 
     - name: Generate plot
+      id: generate_plot
       run: |
         python src/durations.py
   
     - name: Commit and push plot image
+      if: steps.generate_plot.outcome == 'success'
       run: |
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
