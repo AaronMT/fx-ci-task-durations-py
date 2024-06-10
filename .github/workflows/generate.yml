@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v4.1.6
 
     - name: Setup Python
@@ -14,6 +14,7 @@ jobs:
       with:
         python-version: '3.12.3'
         cache: 'pip'
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -22,49 +23,12 @@ jobs:
     - name: Generate plot
       run: |
         python src/durations.py
-
-    - name: Upload image as artifact
-      uses: actions/upload-artifact@v4.3.3
-      with:
-        name: plot-image
-        path: durations.png
   
-    - name: Commit plot image
+    - name: Commit and push plot image
       run: |
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
         if [ ! -d output/images ]; then mkdir -p output/images; fi
         mv durations.png output/images/
         git add output/images/durations.png
-        git commit -m "Add durations plot image"
-
-    - name: Push image to repo
-      uses: ad-m/github-push-action@v0.8.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
-
-    - name: Push image to wiki
-      run: |
-        # Clone the wiki
-        git clone "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git"
-        cd $(basename "${{ github.repository }}.wiki.git")
-        
-        # Add the image
-        if [ ! -d images ]; then mkdir images; fi
-        cp ../output/images/durations.png images/
-        
-        # Commit and push the changes
-        git add images/durations.png
-        git commit -m "Add durations plot to wiki"
-
-    - name: Push wiki changes
-      uses: ad-m/github-push-action@v0.8.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
-
-    - name: Add image to summary
-      run: |
-        echo "![Generated Plot](https://github.com/${{ github.repository }}/raw/main/output/images/durations.png)" >> $GITHUB_STEP_SUMMARY
-
+        git diff --quiet && git diff --staged --quiet || (git commit -m 'Automated push of durations.png'; git push)
