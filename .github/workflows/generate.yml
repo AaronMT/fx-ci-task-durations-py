@@ -29,6 +29,7 @@ jobs:
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
         if [ ! -d output/images ]; then mkdir -p output/images; fi
-        mv durations.png output/images/
-        git add output/images/durations.png
-        git diff --quiet && git diff --staged --quiet || (git commit -m 'Automated push of durations.png'; git push)
+        if [ -f durations.png ]; then
+          mv durations.png output/images/
+          git add output/images/durations.png
+          git diff --quiet && git diff --staged --quiet || (git commit -m 'Automated push of durations.png'; git push)
