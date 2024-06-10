@@ -1,6 +1,6 @@
 projects:
   - name: "fenix"
-    repository: "autoland"
+    repository: "mozilla-central"
     tasks:
     - name: "ui-test-arm"
       symbol: "ui-test-arm"
@@ -18,7 +18,7 @@ projects:
       tier: 1
       result: "success"
   - name: "focus"
-    repository: "autoland"
+    repository: "mozilla-central"
     tasks:
     - name: "ui-test-arm"
       symbol: "ui-test-arm"
